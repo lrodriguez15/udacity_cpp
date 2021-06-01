@@ -13,34 +13,40 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-// Constructor
-Process::Process(const int pidint) : pid_(pidint){};
+// Add constructor for Process
+Process::Process(int pid) : pid_(pid) {}
 
-// Return this process's ID
-int Process::Pid() { return pid_; }
+//  Return this process's ID
+int Process::Pid() const { return pid_; }
 
-// TODO: Return this process's CPU utilization
-float Process::CpuUtilization() {
-  auto result = static_cast<float>(LinuxParser::ActiveJiffies(pid_) /
-                                   LinuxParser::ClockTicksPerSecond());
+//  Return this process's CPU utilization
+float Process::CpuUtilization() const { return cpu_; }
 
-  cpu_utilization_ = result / UpTime();
-  return this->cpu_utilization_;
+void Process::CpuUtilization(long active_ticks, long system_ticks) {
+  long duration_active{active_ticks - cached_active_jiffles_};
+  long duration{system_ticks - cached_system_jiffles_};
+  cpu_ = static_cast<float>(duration_active) / duration;
+  cached_active_jiffles_ = active_ticks;
+  cached_system_jiffles_ = system_ticks;
 }
 
-// Return the command that generated this process
-string Process::Command() { return LinuxParser::Command(pid_); }
+//  Return the command that generated this process
+string Process::Command() const { return LinuxParser::Command(Pid()); }
 
-// Return this process's memory utilization
-string Process::Ram() { return LinuxParser::Ram(pid_); }
+//  Return this process's memory utilization
+string Process::Ram() const { return LinuxParser::Ram(Pid()); }
 
-// Return the user (name) that generated this process
-string Process::User() { return LinuxParser::User(pid_); }
+//  Return the user (name) that generated this process
+string Process::User() const { return LinuxParser::User(Pid()); }
 
-// Return the age of this process (in seconds)
-long int Process::UpTime() { return LinuxParser::UpTime(pid_); }
+//  Return the age of this process (in seconds)
+long int Process::UpTime() const { return LinuxParser::UpTime(Pid()); }
 
-// Overload the "less than" comparison operator for Process objects
-bool Process::operator<(Process const& a) const {
-  return (cpu_utilization_ > a.cpu_utilization_);
+//  Overload the "less than" comparison operator for Process objects
+bool Process::operator>(const Process& a) const {
+  return CpuUtilization() > a.CpuUtilization();
+}
+
+bool Process::operator<(const Process& a) const {
+  return CpuUtilization() < a.CpuUtilization();
 }

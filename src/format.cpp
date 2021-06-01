@@ -17,6 +17,5 @@ string Format::ElapsedTime(long seconds) {
   const int mins = (seconds - hours * 3600 - secs) / 60;
   string str_mins =
       (mins < 10) ? "0" + std::to_string(mins) : std::to_string(mins);
-  return (str_hours + ":" + str_mins + ":" +
-          str_secs);
+  return (str_hours + ":" + str_mins + ":" + str_secs);
 }

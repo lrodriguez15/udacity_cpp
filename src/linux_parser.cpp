@@ -31,7 +31,7 @@ std::vector<std::string> StringToVector(string filename) {
   return result;
 }
 
-// DONE: An example of how to read data from the filesystem
+//  An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
   string line;
   string key;
@@ -124,10 +124,12 @@ long LinuxParser::Jiffies() {
 long LinuxParser::ActiveJiffies(int pid) {
   std::string filename = kProcDirectory + to_string(pid) + kStatFilename;
   std::vector<string> vstr = StringToVector(filename);
-  if (vstr.size() >= 21)
-    return (stol(vstr[13]) + stol(vstr[14]) + stol(vstr[15]) + stol(vstr[16]));
-
-  return 0;
+  long result = 0;
+  if (vstr.size() >= 21) {
+    result =
+        (stol(vstr[13]) + stol(vstr[14]) + stol(vstr[15]) + stol(vstr[16]));
+  }
+  return result;
 }
 // Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() {
@@ -280,14 +282,14 @@ long ReadProcInfo(const std::string filename, const std::string &search_key) {
   std::string line, key, str_value;
   std::ifstream f_stream(filename);
 
-  if (f_stream.is_open) {
+  if (f_stream) {
     while (getline(f_stream, line)) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream linestream(line);
 
       while (linestream >> key >> str_value) {
         if (key == search_key) {
-          return stol(str_value)
+          return stol(str_value);
         }
       }
     }
