@@ -24,23 +24,21 @@ vector<Process>& System::Processes() {
   vector<int> pids{LinuxParser::Pids()};
 
   // Create a set
-  set<int> extant_pids;
+  set<int> existing_pids;
   for (Process const& process : processes_) {
-    extant_pids.insert(process.Pid());
+    existing_pids.insert(process.Pid());
   }
-
-  // Emplace all new processes
   for (int pid : pids) {
-    if (extant_pids.find(pid) == extant_pids.end())
+    if (existing_pids.find(pid) == existing_pids.end())
       processes_.emplace_back(pid);
   }
-
-  // Update CPU utilization
+  
+  // Update the CPU utilization for the identified processes
   for (auto& process : processes_) {
     process.CpuUtilization(LinuxParser::ActiveJiffies(process.Pid()),
                            LinuxParser::Jiffies());
   }
-
+  // We needed to define the > operator for this to work
   std::sort(processes_.begin(), processes_.end(), std::greater<Process>());
   return processes_;
 }

@@ -2,16 +2,16 @@
 
 #include "linux_parser.h"
 
-// TODO: Return the aggregate CPU utilization
+// TReturn the aggregate CPU utilization
 float Processor::Utilization() {
   float utilization{0};
-  long active_ticks = LinuxParser::ActiveJiffies();
-  long idle_ticks = LinuxParser::IdleJiffies();
-  long duration_active{active_ticks - cached_active_ticks_};
-  long duration_idle{idle_ticks - cached_idle_ticks_};
+  long active_jiffles = LinuxParser::ActiveJiffies();
+  long idle_jiffles = LinuxParser::IdleJiffies();
+  long duration_active{active_jiffles - cached_active_jiffles_};
+  long duration_idle{idle_jiffles - cached_idle_jiffles_};
   long duration{duration_active + duration_idle};
   utilization = static_cast<float>(duration_active) / duration;
-  cached_active_ticks_ = active_ticks;
-  cached_idle_ticks_ = idle_ticks;
+  cached_active_jiffles_ = active_jiffles;
+  cached_idle_jiffles_ = idle_jiffles;
   return utilization;
 }

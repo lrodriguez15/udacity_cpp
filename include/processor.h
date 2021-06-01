@@ -7,8 +7,8 @@ class Processor {
 
   // DONE: Declare any necessary private members
  private:
-  long cached_active_ticks_{0};
-  long cached_idle_ticks_{0};
+  long cached_active_jiffles_{0};
+  long cached_idle_jiffles_{0};
 };
 
 #endif

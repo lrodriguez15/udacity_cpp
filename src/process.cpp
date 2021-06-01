@@ -22,12 +22,12 @@ int Process::Pid() const { return pid_; }
 //  Return this process's CPU utilization
 float Process::CpuUtilization() const { return cpu_; }
 
-void Process::CpuUtilization(long active_ticks, long system_ticks) {
-  long duration_active{active_ticks - cached_active_jiffles_};
-  long duration{system_ticks - cached_system_jiffles_};
+void Process::CpuUtilization(long active_jiffles, long system_jiffles) {
+  long duration_active{active_jiffles - cached_active_jiffles_};
+  long duration{system_jiffles - cached_system_jiffles_};
   cpu_ = static_cast<float>(duration_active) / duration;
-  cached_active_jiffles_ = active_ticks;
-  cached_system_jiffles_ = system_ticks;
+  cached_active_jiffles_ = active_jiffles;
+  cached_system_jiffles_ = system_jiffles;
 }
 
 //  Return the command that generated this process
