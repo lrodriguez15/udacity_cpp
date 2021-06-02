@@ -36,7 +36,7 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   mvwprintw(window, ++row, 2, ("Kernel: " + system.Kernel()).c_str());
   mvwprintw(window, ++row, 2, "CPU: ");
   wattron(window, COLOR_PAIR(1));
-  mvwprintw(window, row, 10, "");
+  mvwprintw(window, row, 10, " ");
   wprintw(window, ProgressBar(system.Cpu().Utilization()).c_str());
   wattroff(window, COLOR_PAIR(1));
   mvwprintw(window, ++row, 2, "Memory: ");
@@ -59,8 +59,8 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
   int row{0};
   int const pid_column{2};
   int const user_column{9};
-  int const cpu_column{16};
-  int const ram_column{26};
+  int const cpu_column{18};
+  int const ram_column{27};
   int const time_column{35};
   int const command_column{46};
   wattron(window, COLOR_PAIR(2));

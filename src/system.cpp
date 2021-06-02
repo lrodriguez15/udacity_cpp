@@ -21,22 +21,13 @@ Processor& System::Cpu() { return cpu_; }
 
 //  Return a container composed of the system's processes
 vector<Process>& System::Processes() {
-  vector<int> pids{LinuxParser::Pids()};
+  processes_.clear();
+  auto pids{LinuxParser::Pids()};
 
-  // Create a set
-  set<int> existing_pids;
-  for (Process const& process : processes_) {
-    existing_pids.insert(process.Pid());
-  }
-  for (int pid : pids) {
-    if (existing_pids.find(pid) == existing_pids.end())
-      processes_.emplace_back(pid);
-  }
-  
-  // Update the CPU utilization for the identified processes
-  for (auto& process : processes_) {
-    process.CpuUtilization(LinuxParser::ActiveJiffies(process.Pid()),
-                           LinuxParser::Jiffies());
+  for (const auto& pid : pids) {
+    Process p(pid);
+    p.CpuUtilization(LinuxParser::ActiveJiffies(pid), LinuxParser::Jiffies());
+    processes_.push_back(p);
   }
   // We needed to define the > operator for this to work
   std::sort(processes_.begin(), processes_.end(), std::greater<Process>());

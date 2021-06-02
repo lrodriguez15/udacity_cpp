@@ -40,6 +40,7 @@ enum CPUStates {
   kGuest_,
   kGuestNice_
 };
+
 std::vector<std::string> CpuUtilization();
 long Jiffies();
 long ActiveJiffies();
@@ -54,8 +55,8 @@ std::string User(int pid);
 long int UpTime(int pid);
 
 // Readers
-long ReadProcMem(const std::string &key);
-long ReadProcPID(const int &pid, const std::string &key);
+long ReadProcessMemory(const std::string key);
+long ReadProcessID(const int &pid, const std::string key);
 
 // Helper Functions
 int ClockTicksPerSecond();

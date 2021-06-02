@@ -23,9 +23,7 @@ int Process::Pid() const { return pid_; }
 float Process::CpuUtilization() const { return cpu_; }
 
 void Process::CpuUtilization(long active_jiffles, long system_jiffles) {
-  long duration_active{active_jiffles - cached_active_jiffles_};
-  long duration{system_jiffles - cached_system_jiffles_};
-  cpu_ = static_cast<float>(duration_active) / duration;
+  cpu_ = (static_cast<float>(active_jiffles)/ LinuxParser::ClockTicksPerSecond())/UpTime();
   cached_active_jiffles_ = active_jiffles;
   cached_system_jiffles_ = system_jiffles;
 }
@@ -42,11 +40,12 @@ string Process::User() const { return LinuxParser::User(Pid()); }
 //  Return the age of this process (in seconds)
 long int Process::UpTime() const { return LinuxParser::UpTime(Pid()); }
 
-//  Overload the "less than" comparison operator for Process objects
+//  Overload the "greater than" comparison operator for Process objects
 bool Process::operator>(const Process& a) const {
   return CpuUtilization() > a.CpuUtilization();
 }
 
+//  Overload the "less than" comparison operator for Process objects
 bool Process::operator<(const Process& a) const {
   return CpuUtilization() < a.CpuUtilization();
 }
